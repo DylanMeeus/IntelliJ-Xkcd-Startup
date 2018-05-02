@@ -21,5 +21,14 @@ public class XkcdComic {
         return url;
     }
 
+    @NotNull
+    public String getTitle() {
+        return title;
+    }
+
+    @NotNull
+    public String getAltText() {
+        return altText;
+    }
 
 }

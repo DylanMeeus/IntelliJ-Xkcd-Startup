@@ -6,18 +6,14 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import org.jetbrains.annotations.Nullable;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 
 public class XkcdDialog extends DialogWrapper {
 
     private JLabel testLabel;
     private JPanel XKCDPanel;
-    private final String htmlContent = "<html><body><img src=\"%s\"></body></html>";
+    private final String htmlContent = "<html><body><img src=\"%s\"><p>%s</p></body></html>";
     public XkcdDialog(){
         super(WindowManagerEx.getInstanceEx().findVisibleFrame(), true);
         initialize();
@@ -27,18 +23,21 @@ public class XkcdDialog extends DialogWrapper {
 
     private void initialize(){
         // load the data
-        XKCDPanel = new JPanel();
+        XKCDPanel = new JPanel(new BorderLayout());
         try {
             TipUIUtil.Browser browser = TipUIUtil.createBrowser();
             XkcdComic comic = XkcdService.getComic().orElseThrow(Exception::new);
-            browser.setText(String.format(htmlContent, comic.getUrl()));
-            XKCDPanel.add(browser.getComponent());
+            setTitle(comic.getTitle());
+            browser.setText(String.format(htmlContent, comic.getUrl(), comic.getUrl()));
+            XKCDPanel.add(browser.getComponent(), BorderLayout.CENTER);
+            JTextArea altField = new JTextArea("Alt: " + comic.getAltText());
+            altField.setEditable(false);
+            altField.setLineWrap(true);
+            altField.setColumns(50);
+            XKCDPanel.add(altField, BorderLayout.SOUTH);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        testLabel = new JLabel();
-        testLabel.setText("Hello World");
-        System.out.println("initialized");
         init();
     }
 

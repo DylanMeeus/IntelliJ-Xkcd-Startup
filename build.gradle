@@ -1,0 +1,30 @@
+plugins {
+    id 'org.jetbrains.intellij' version '0.3.1'
+}
+
+group 'itca'
+version '1.1'
+
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'idea'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.google.code.gson:gson:2.8.4'
+}
+
+intellij {
+    version '2018.1'
+    plugins 'coverage'
+    pluginName 'xkcdotd'
+}
+patchPluginXml {
+    changeNotes """
+     """
+}
