@@ -1,0 +1,5 @@
+*.class
+build/
+*.swp
+.gradle/
+out/
