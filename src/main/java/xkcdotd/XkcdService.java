@@ -58,10 +58,9 @@ public interface XkcdService {
     @NotNull
     static XkcdComic getComic(final int id) throws IOException {
         JsonObject rootObject = getComicAsJsonObject(String.format(jsonUrl, id));
-        int num = rootObject.get("num").getAsInt();
         String url = rootObject.get("img").getAsString();
         String title = rootObject.get("title").getAsString();
         String alt = rootObject.get("alt").getAsString();
-        return new XkcdComic(url, title, alt);
+        return new XkcdComic(id, url, title, alt);
     }
 }

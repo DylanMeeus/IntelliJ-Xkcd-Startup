@@ -13,7 +13,7 @@ public class XkcdDialog extends DialogWrapper {
 
     private JLabel testLabel;
     private JPanel XKCDPanel;
-    private final String htmlContent = "<html><body><img src=\"%s\"><p>%s</p></body></html>";
+    private final String htmlContent = "<html><body><img src=\"%s\"></br><p>%s</p></body></html>";
     public XkcdDialog(){
         super(WindowManagerEx.getInstanceEx().findVisibleFrame(), true);
         initialize();
@@ -27,8 +27,8 @@ public class XkcdDialog extends DialogWrapper {
         try {
             TipUIUtil.Browser browser = TipUIUtil.createBrowser();
             XkcdComic comic = XkcdService.getComic().orElseThrow(Exception::new);
-            setTitle(comic.getTitle());
-            browser.setText(String.format(htmlContent, comic.getUrl(), comic.getUrl()));
+            setTitle(String.format("Xkcd %d: %s",comic.getId() , comic.getTitle()));
+            browser.setText(String.format(htmlContent, comic.getImageUrl(), comic.getUrl()));
             XKCDPanel.add(browser.getComponent(), BorderLayout.CENTER);
             JTextArea altField = new JTextArea("Alt: " + comic.getAltText());
             altField.setEditable(false);
