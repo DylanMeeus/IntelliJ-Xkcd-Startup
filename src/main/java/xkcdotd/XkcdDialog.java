@@ -4,10 +4,15 @@ import com.intellij.ide.util.TipUIUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class XkcdDialog extends DialogWrapper {
 
@@ -18,7 +23,6 @@ public class XkcdDialog extends DialogWrapper {
         super(WindowManagerEx.getInstanceEx().findVisibleFrame(), true);
         initialize();
     }
-
 
 
     private void initialize(){
@@ -35,12 +39,17 @@ public class XkcdDialog extends DialogWrapper {
             altField.setLineWrap(true);
             altField.setColumns(50);
             XKCDPanel.add(altField, BorderLayout.SOUTH);
+            initializeActions(comic);
         } catch (Exception e) {
             e.printStackTrace();
         }
         init();
     }
 
+    private void initializeActions(XkcdComic comic) {
+        this.setCancelButtonText("Close");
+        this.myOKAction = new OpenInBrowserAction(comic);
+    }
 
     @Nullable
     @Override
@@ -50,4 +59,27 @@ public class XkcdDialog extends DialogWrapper {
     public static XkcdDialog createForProject(final Project project) {
         return new XkcdDialog();
     }
+
+    private static class OpenInBrowserAction extends AbstractAction{
+
+        private final XkcdComic comic;
+
+        public OpenInBrowserAction(@NotNull final XkcdComic comic){
+            putValue(NAME, "View in browser");
+            this.comic = comic;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if (!Desktop.isDesktopSupported()) {
+                return;
+            }
+            try {
+                Desktop.getDesktop().browse(new URI(comic.getUrl()));
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
